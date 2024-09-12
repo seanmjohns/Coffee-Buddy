@@ -12,3 +12,12 @@ mvn spring-boot:run
 ```
 
 You can then connect to it in your browser at `http://localhost:8080/`
+
+
+## API Keys
+
+
+Add to src/main/resources/application.properties:
+```
+google.api.key=<Your_API_key>
+```
