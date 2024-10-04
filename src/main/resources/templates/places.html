@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Places Finder</title>
     <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.css"
+    />
+    <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
@@ -187,6 +191,26 @@
               createMarker(results[i]);
               addPlaceToList(results[i]);
             }
+            $("#places-table").bootstrapTable({
+              sortable: true,
+              columns: [
+                {
+                  field: "name",
+                  title: "Name",
+                  sortable: true,
+                },
+                {
+                  field: "address",
+                  title: "Address",
+                  sortable: true,
+                },
+                {
+                  field: "tags",
+                  title: "Tags",
+                },
+              ],
+              data: tableData,
+            });
           }
         });
 
@@ -217,19 +241,19 @@
           });
         }
 
+        const tableData = [];
+
         function addPlaceToList(place) {
           // A place returned from the API will have the following useful attributes (and more):
           // place.name: Name of the place
           // place.vicinity: Address of the place
           // place.types: array of tags
           // place.opening_hours: Opening hours
-          const table = $("#places-table-body");
-          const row = $("<tr>");
-          const nameCell = $("<td>").text(place.name);
-          const addressCell = $("<td>").text(place.vicinity);
-          const tags = $("<td>").text(place.types.join(", "));
-          row.append(nameCell, addressCell, tags);
-          table.append(row);
+          tableData.push({
+            name: place.name,
+            address: place.vicinity,
+            tags: place.types.join(", "),
+          });
         }
       }
 
@@ -239,5 +263,6 @@
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.js"></script>
   </body>
 </html>
