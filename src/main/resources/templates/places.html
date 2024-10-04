@@ -177,6 +177,7 @@
           icon: {
             url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
           },
+          draggable: true,
         });
 
         // Perform the search and process the results
@@ -190,9 +191,29 @@
         });
 
         function createMarker(place) {
+          const contentString = `
+            <div>
+              <h4>${place.name}</h3>
+              <p>${place.vicinity}</p>
+              <p>Price Level: ${place.price_level}</p>
+            </div>
+          `;
+          const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+            ariaLabel: place.name,
+          });
+
           const marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
+
+            title: place.name, // On hover, the place name is shown.
+          });
+          marker.addListener("click", () => {
+            infowindow.open({
+              anchor: marker,
+              map,
+            });
           });
         }
 
