@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocationSearch - Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
+        <h1 class="display-3 text-center mb-5">LocationSearch Registration</h1>
+
+        <form class="w-50" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button id="back" type="button" class="btn btn-primary">Go Back</button>
+                <button id="submit" type="submit" class="btn btn-success">Register</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+<script>
+    const submitButttom = document.getElementById("submit");
+    submitButttom.addEventListener('click',()=>{
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const email = document.getElementById('email').value;
+      const data ={
+        username,
+        email,
+        password
+      }
+      
+      // Check if the 2 passwords match
+      if(password == confirmPassword){
+        const jsonData = JSON.stringify(data);
+        //Make a POST request to the button
+        fetch('/register', {
+          method: 'POST',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: jsonData
+        })
+        .then(response =>{
+          //alert('succesfull');
+          //if(response.status == 200){
+            //alert('succesfull');
+          //xs}
+        })
+      }
+      
+    })
+  </script>
