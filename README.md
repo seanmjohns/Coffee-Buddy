@@ -11,12 +11,13 @@ There are known issues with running LocationSearch on FireFox. For example, you 
 ## Server Setup (API Keys + MySQL server setup)
 
 Create and add to `src/main/resources/application.properties`:
+
 ```
 google.api.key=<insert_api_key_here>
 
 # MySQL Configuration
 
-#Below is an example configuration of a local mysql server
+#Below is an example configuration of a local mysql server (given you use the same parameters as the docker run command below)
 #spring.datasource.url=jdbc:mysql://localhost:3306/location_search_db
 #spring.datasource.username=root
 #spring.datasource.password=location-passw
@@ -43,11 +44,11 @@ An example application.properties file can be found under example_configs
 
 ## Create MySQL Server (locally)
 
-Install Docker and run the following commands
+Install Docker and run the following commands (you can change run parameters if you really want, just make sure to change the application.properties above)
 
 ```
 docker pull mysql:latest
-docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=<INSERT-PASSWORD-HERE> -e MYSQL_DATABASE=location_search_db -p 3306:3306 -d mysql:latest
+docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=location-passw -e MYSQL_DATABASE=location_search_db -p 3306:3306 -d mysql:latest
 ```
 
 This pulls the latest image of MySQL from DockerHub and creates a MySQL Database on port 3306 on your local machine.
@@ -57,6 +58,7 @@ To access your database locally for testing purposes, run this command here:
 ```
 docker exec -it mysql-container mysql -uroot -p
 ```
+
 From there enter your database password and select the database using:
 
 ```
@@ -73,8 +75,7 @@ mvn spring-boot:run
 
 You can then connect to it in your browser at `http://localhost:8080/`
 
-
 ## Troubleshooting
 
 Unusual error: `org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'placesController': Injection of autowired dependencies failed`
-Ensure you have setup your Google API key (See Server Setup (API Keys)) 
+Ensure you have setup your Google API key (See Server Setup (API Keys))
