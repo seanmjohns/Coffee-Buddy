@@ -33,7 +33,7 @@
     </div>
     <div class="container">
       <div class="alert alert-info">
-        Georgia Tech's latitude & longitude are: 33.7709454, -84.3942562.
+        Default search is centered on Georgia Tech (latitude: 33.7709454, longitude: -84.3942562).
       </div>
       <form method="GET" action="/" class="mt-3 mb-3">
         <div class="row g-3">
@@ -77,7 +77,6 @@
               class="form-select"
               id="locationTypes"
               name="locationTypes"
-              th:value="${locationTypes}"
             >
               <option
                 value="bar"
@@ -158,7 +157,15 @@
       </table>
     </div>
 
-    <script>
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      const defaultLatitude = /*[[${latitude}]]*/ '33.7709454';
+      const defaultLongitude = /*[[${longitude}]]*/ '-84.3942562';
+      const defaultRadius = /*[[${radius}]]*/ '500';
+      const defaultLimit = /*[[${limit}]]*/ 10;
+      const defaultLocationTypes = /*[[${locationTypes}]]*/ ['restaurant'];
+      /*]]>*/
+
       function getUrlParameter(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
@@ -169,9 +176,13 @@
       }
 
       function initMap() {
-        let latitude = parseFloat(getUrlParameter("latitude")) || 33.7709454;
-        let longitude = parseFloat(getUrlParameter("longitude")) || -84.3942562;
-        let types = getUrlParameter("locationTypes") || "restaurant";
+
+        let latitude = parseFloat(getUrlParameter("latitude")) || parseFloat(defaultLatitude);
+        let longitude = parseFloat(getUrlParameter("longitude")) || parseFloat(defaultLongitude);
+        let radius = parseFloat(getUrlParameter("radius")) || parseFloat(defaultRadius);
+        let limit = parseInt(getUrlParameter("limit")) || defaultLimit;
+        let types = getUrlParameter("locationTypes") || defaultLocationTypes.join(',');
+        
         const latLong = { lat: latitude, lng: longitude };
 
         const map = new google.maps.Map($("#map")[0], {
@@ -183,7 +194,9 @@
 
         const request = {
           location: latLong,
-          radius: parseFloat(getUrlParameter("radius")) || 500,
+
+          radius: radius,
+
           type: types.split(','),
         };
 
@@ -198,7 +211,7 @@
 
         service.nearbySearch(request, function (results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            const limit = parseInt(getUrlParameter("limit")) || 10;
+
             results = results.slice(0, limit);
             
             for (let i = 0; i < results.length; i++) {

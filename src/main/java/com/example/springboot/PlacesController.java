@@ -16,21 +16,30 @@ public class PlacesController {
     @Value("${google.api.key}")
     private String googleApiKey;
 
+    private static final String DEFAULT_LATITUDE = "33.7709454";
+    private static final String DEFAULT_LONGITUDE = "-84.3942562";
+    private static final String DEFAULT_RADIUS = "500";
+    private static final Integer DEFAULT_LIMIT = 10;
+    private static final List<String> DEFAULT_LOCATION_TYPES = Arrays.asList("restaurant");
+
+
     @GetMapping("/")
     public String findPlaces(@RequestParam(value = "latitude", required = false) String latitude,
                  @RequestParam(value = "longitude", required = false) String longitude,
                  @RequestParam(value = "radius", required = false) String radius,
-                 @RequestParam(value = "limit", required = false, defaultValue = "25") Integer limit,
+
+                 @RequestParam(value = "limit", required = false) Integer limit,
                  @RequestParam(value = "locationTypes", required = false) String[] locationTypes,
                  Model model) {
 
-        model.addAttribute("longitude", longitude);
-        model.addAttribute("latitude", latitude);
-        model.addAttribute("radius", radius);
-        model.addAttribute("limit", limit);
+        model.addAttribute("latitude", latitude != null ? latitude : DEFAULT_LATITUDE);
+        model.addAttribute("longitude", longitude != null ? longitude : DEFAULT_LONGITUDE);
+        model.addAttribute("radius", radius != null ? radius : DEFAULT_RADIUS);
+        model.addAttribute("limit", limit != null ? limit : DEFAULT_LIMIT);
         model.addAttribute("googleApiKey", googleApiKey);
         
-        List<String> types = locationTypes != null ? Arrays.asList(locationTypes) : new ArrayList<>();
+        List<String> types = locationTypes != null ? Arrays.asList(locationTypes) : DEFAULT_LOCATION_TYPES;
+
         model.addAttribute("locationTypes", types);
         
         return "places";
