@@ -131,7 +131,11 @@
           </div>
         </div>
         <div class="row mt-3">
-          <div class="col-md-12">
+          <div class="col-md-3">
+            <label for="limit" class="form-label">Number of locations to display</label>
+            <input type="number" class="form-control" id="limit" name="limit" min="1" max="20" th:value="${limit}" required>
+          </div>
+          <div class="col-md-9 d-flex align-items-end">
             <button type="submit" class="btn btn-primary">Search</button>
           </div>
         </div>
@@ -194,6 +198,9 @@
 
         service.nearbySearch(request, function (results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
+            const limit = parseInt(getUrlParameter("limit")) || 10;
+            results = results.slice(0, limit);
+            
             for (let i = 0; i < results.length; i++) {
               createMarker(results[i]);
               getPlaceDetails(results[i], i === results.length - 1);
