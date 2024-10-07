@@ -28,6 +28,10 @@ spring.datasource.username=<insert_username>
 spring.datasource.password=<insert_password>
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
+# Google Login Screen
+spring.security.oauth2.client.registration.google.client-id=<Insert-Client-ID>
+spring.security.oauth2.client.registration.google.client-secret=<Insert-Client-Secret>
+
 # JPA Properties
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
@@ -64,6 +68,19 @@ From there enter your database password and select the database using:
 ```
 USE database_name;
 ```
+
+## Create Google OAuth2 Client Login (Locally)
+
+Set Up OAuth2 Client Login Consent within Google Console
+
+Create an OAuth2 Client Key within Google Console
+
+When setting up OAuth2 Client keys, set the redirect URI to:
+
+```
+http://localhost:8080/login/oauth2/code/google
+```
+or to whichever URL you are running the server on
 
 ## Developer Guide
 

@@ -49,6 +49,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
             .csrf(AbstractHttpConfigurer::disable)
+            .oauth2Login(oauth2login -> {
+                oauth2login.loginPage("/login");
+                oauth2login.successHandler((request, response, authentication) -> response.sendRedirect("/"));
+            })
             .formLogin(httpForm ->{
                 httpForm.loginPage("/login").permitAll();
                 httpForm.defaultSuccessUrl("/");
