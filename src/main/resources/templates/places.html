@@ -212,24 +212,32 @@
         service.nearbySearch(request, function (results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
 
-            results = results.slice(0, limit);
-            
+            results = results.slice(0, limit);            
             for (let i = 0; i < results.length; i++) {
-              createMarker(results[i]);
+              createMarker(results[i], map, latLong);
+
               getPlaceDetails(results[i], i === results.length - 1);
             }
           }
         });
 
-        function createMarker(place) {
+        function createMarker(place, map, centerLatLng) {
+          const distance = google.maps.geometry.spherical.computeDistanceBetween(
+            centerLatLng,
+            place.geometry.location
+          );
+
           const contentString = `
             <div>
-              <h4>${place.name}</h4>
-              <p>${place.vicinity}</p>
-              <p>Rating: ${place.rating || 'N/A'}</p>
-              <p>Price Level: ${place.price_level ? '$'.repeat(place.price_level) : 'N/A'}</p>
+
+              <h5>${place.name}</h5>
+              <p>Distance: ${Math.round(distance)} m</p>
+              <p>Rating: ${place.rating ? place.rating + ' / 5' : 'N/A'}</p>
+              <p>Price Level: ${getPriceLevel(place.price_level)}</p>
+
             </div>
           `;
+
           const infowindow = new google.maps.InfoWindow({
             content: contentString,
             ariaLabel: place.name,
@@ -239,13 +247,32 @@
             map: map,
             position: place.geometry.location,
             title: place.name,
+
           });
+
+          marker.addListener("mouseover", () => {
+            infowindow.open({
+              anchor: marker,
+              map,
+            });
+          });
+
+          marker.addListener("mouseout", () => {
+            infowindow.close();
+
+          });
+
           marker.addListener("click", () => {
             infowindow.open({
               anchor: marker,
               map,
             });
           });
+        }
+
+        function getPriceLevel(level) {
+          if (level === undefined) return 'N/A';
+          return '$'.repeat(level);
         }
 
         const tableData = [];
@@ -274,7 +301,9 @@
             distance: Math.round(distance),
             rating: place.rating || "N/A",
             openingHours: place.opening_hours ? (place.opening_hours.isOpen() ? "Open" : "Closed") : "N/A",
-            priceLevel: place.price_level ? "$".repeat(place.price_level) : "N/A"
+
+            priceLevel: getPriceLevel(place.price_level)
+
           });
         }
 

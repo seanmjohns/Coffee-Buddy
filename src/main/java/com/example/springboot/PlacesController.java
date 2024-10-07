@@ -22,7 +22,6 @@ public class PlacesController {
     private static final Integer DEFAULT_LIMIT = 10;
     private static final List<String> DEFAULT_LOCATION_TYPES = Arrays.asList("restaurant");
 
-
     @GetMapping("/")
     public String findPlaces(@RequestParam(value = "latitude", required = false) String latitude,
                  @RequestParam(value = "longitude", required = false) String longitude,
