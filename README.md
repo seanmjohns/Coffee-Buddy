@@ -2,6 +2,11 @@
 
 This project seeks to provide users with the ability to search for points of interest within a given location. Users will be able to specify locations via coordinates which will be portrayed via a Google Maps interface and filter for locations of interests such as cafes or bakeries. Users can register and use accounts with our provided services to access relevant information about these locations in our databases.
 
+## Browser Compatibility
+
+Chrome is the only tested web browser for client use.
+
+There are known issues with running LocationSearch on FireFox. For example, you cannot create accounts if using FireFox.
 
 ## Server Setup (API Keys + MySQL server setup)
 
