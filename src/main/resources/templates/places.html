@@ -22,6 +22,18 @@
         height: 500px;
         width: 100%;
       }
+      .info-window {
+        max-width: 300px;
+      }
+      .info-window h5 {
+        margin-bottom: 10px;
+      }
+      .info-window p {
+        margin-bottom: 5px;
+      }
+      .info-window .btn {
+        margin-right: 10px;
+      }
     </style>
   </head>
   <body>
@@ -212,22 +224,26 @@
         service.nearbySearch(request, function (results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
 
-            results = results.slice(0, limit);            
+            results = results.slice(0, limit);
+            
             for (let i = 0; i < results.length; i++) {
-              createMarker(results[i], map, latLong);
+              createMarker(results[i], map, latLong, service);
 
               getPlaceDetails(results[i], i === results.length - 1);
             }
           }
         });
 
-        function createMarker(place, map, centerLatLng) {
+
+        function createMarker(place, map, centerLatLng, service) {
+
           const distance = google.maps.geometry.spherical.computeDistanceBetween(
             centerLatLng,
             place.geometry.location
           );
 
-          const contentString = `
+
+          const hoverContentString = `
             <div>
 
               <h5>${place.name}</h5>
@@ -238,8 +254,9 @@
             </div>
           `;
 
-          const infowindow = new google.maps.InfoWindow({
-            content: contentString,
+          const hoverInfowindow = new google.maps.InfoWindow({
+            content: hoverContentString,
+
             ariaLabel: place.name,
           });
 
@@ -251,23 +268,53 @@
           });
 
           marker.addListener("mouseover", () => {
-            infowindow.open({
+            hoverInfowindow.open({
+
               anchor: marker,
               map,
             });
           });
 
           marker.addListener("mouseout", () => {
-            infowindow.close();
-
+            hoverInfowindow.close();
           });
 
           marker.addListener("click", () => {
-            infowindow.open({
-              anchor: marker,
-              map,
+            service.getDetails({ placeId: place.place_id }, function(result, status) {
+              if (status === google.maps.places.PlacesServiceStatus.OK) {
+                const clickContentString = `
+                  <div class="info-window">
+                    <h5>${result.name}</h5>
+                    <p><strong>Address:</strong> ${result.formatted_address}</p>
+                    <p><strong>Phone:</strong> ${result.formatted_phone_number || 'N/A'}</p>
+                    <p><strong>Rating:</strong> ${result.rating ? result.rating + ' / 5' : 'N/A'}</p>
+                    <p><strong>Price Level:</strong> ${getPriceLevel(result.price_level)}</p>
+                    <p><strong>Open Now:</strong> ${result.opening_hours ? (result.opening_hours.isOpen() ? 'Yes' : 'No') : 'N/A'}</p>
+                    <p><strong>Distance:</strong> ${Math.round(distance)} m</p>
+                    <div>
+                      <a href="https://www.google.com/maps/dir/?api=1&destination=${result.geometry.location.lat()},${result.geometry.location.lng()}" target="_blank" class="btn btn-primary btn-sm">Get Directions</a>
+                      ${result.website ? `<a href="${result.website}" target="_blank" class="btn btn-secondary btn-sm">Visit Website</a>` : ''}
+                    </div>
+                  </div>
+                `;
+
+                const clickInfowindow = new google.maps.InfoWindow({
+                  content: clickContentString,
+                  ariaLabel: result.name,
+                });
+
+                clickInfowindow.open({
+                  anchor: marker,
+                  map,
+                });
+              }
             });
           });
+        }
+
+        function getPriceLevel(level) {
+          if (level === undefined) return 'N/A';
+          return '$'.repeat(level);
         }
 
         function getPriceLevel(level) {

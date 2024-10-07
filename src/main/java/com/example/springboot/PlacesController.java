@@ -26,7 +26,6 @@ public class PlacesController {
     public String findPlaces(@RequestParam(value = "latitude", required = false) String latitude,
                  @RequestParam(value = "longitude", required = false) String longitude,
                  @RequestParam(value = "radius", required = false) String radius,
-
                  @RequestParam(value = "limit", required = false) Integer limit,
                  @RequestParam(value = "locationTypes", required = false) String[] locationTypes,
                  Model model) {
