@@ -15,7 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script
-      th:src="'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places'"
+      th:src="'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places,geometry'"
     ></script>
     <style>
       #map {
@@ -141,9 +141,13 @@
       <table id="places-table" class="table table-striped">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Tags</th>
+            <th data-field="name" data-sortable="true">Name</th>
+            <th data-field="address" data-sortable="true">Address</th>
+            <th data-field="tags" data-sortable="true">Tags</th>
+            <th data-field="distance" data-sortable="true">Distance (m)</th>
+            <th data-field="rating" data-sortable="true">Rating</th>
+            <th data-field="openingHours" data-sortable="true">Opening Hours</th>
+            <th data-field="priceLevel" data-sortable="true">Price Level</th>
           </tr>
         </thead>
         <tbody id="places-table-body"></tbody>
@@ -161,10 +165,9 @@
       }
 
       function initMap() {
-        // Default latitude and longitude are set for Georgia Tech
         let latitude = parseFloat(getUrlParameter("latitude")) || 33.7709454;
         let longitude = parseFloat(getUrlParameter("longitude")) || -84.3942562;
-        let types = getUrlParameter("locationType") || "restaurant";
+        let types = getUrlParameter("locationTypes") || "restaurant";
         const latLong = { lat: latitude, lng: longitude };
 
         const map = new google.maps.Map($("#map")[0], {
@@ -176,8 +179,8 @@
 
         const request = {
           location: latLong,
-          radius: parseFloat(getUrlParameter("radius")) || 500, // Radius in meters
-          type: [types], // can be multiple types
+          radius: parseFloat(getUrlParameter("radius")) || 500,
+          type: types.split(','),
         };
 
         const specialMarker = new google.maps.Marker({
@@ -189,42 +192,22 @@
           draggable: true,
         });
 
-        // Perform the search and process the results
         service.nearbySearch(request, function (results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
             for (let i = 0; i < results.length; i++) {
               createMarker(results[i]);
-              addPlaceToList(results[i]);
+              getPlaceDetails(results[i], i === results.length - 1);
             }
-            $("#places-table").bootstrapTable({
-              sortable: true,
-              columns: [
-                {
-                  field: "name",
-                  title: "Name",
-                  sortable: true,
-                },
-                {
-                  field: "address",
-                  title: "Address",
-                  sortable: true,
-                },
-                {
-                  field: "tags",
-                  title: "Tags",
-                },
-              ],
-              data: tableData,
-            });
           }
         });
 
         function createMarker(place) {
           const contentString = `
             <div>
-              <h4>${place.name}</h3>
+              <h4>${place.name}</h4>
               <p>${place.vicinity}</p>
-              <p>Price Level: ${place.price_level}</p>
+              <p>Rating: ${place.rating || 'N/A'}</p>
+              <p>Price Level: ${place.price_level ? '$'.repeat(place.price_level) : 'N/A'}</p>
             </div>
           `;
           const infowindow = new google.maps.InfoWindow({
@@ -235,8 +218,7 @@
           const marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location,
-
-            title: place.name, // On hover, the place name is shown.
+            title: place.name,
           });
           marker.addListener("click", () => {
             infowindow.open({
@@ -248,16 +230,39 @@
 
         const tableData = [];
 
+        function getPlaceDetails(place, isLast) {
+          service.getDetails({ placeId: place.place_id }, function(result, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              addPlaceToList(result);
+              if (isLast) {
+                initTable();
+              }
+            }
+          });
+        }
+
         function addPlaceToList(place) {
-          // A place returned from the API will have the following useful attributes (and more):
-          // place.name: Name of the place
-          // place.vicinity: Address of the place
-          // place.types: array of tags
-          // place.opening_hours: Opening hours
+          const distance = google.maps.geometry.spherical.computeDistanceBetween(
+            new google.maps.LatLng(latitude, longitude),
+            place.geometry.location
+          );
+
           tableData.push({
             name: place.name,
             address: place.vicinity,
             tags: place.types.join(", "),
+            distance: Math.round(distance),
+            rating: place.rating || "N/A",
+            openingHours: place.opening_hours ? (place.opening_hours.isOpen() ? "Open" : "Closed") : "N/A",
+            priceLevel: place.price_level ? "$".repeat(place.price_level) : "N/A"
+          });
+        }
+
+        function initTable() {
+          $("#places-table").bootstrapTable({
+            data: tableData,
+            sortName: 'distance',
+            sortOrder: 'asc'
           });
         }
       }
