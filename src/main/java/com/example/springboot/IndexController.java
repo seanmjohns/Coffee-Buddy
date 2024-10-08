@@ -41,7 +41,7 @@ public class IndexController {
 	@PostMapping("/login")
 	public RedirectView handleLoginFormSubmit(@RequestParam Map<String, String> formData) {
 		// Process form data here
-		System.out.println("asdfghjkl");
+		System.out.println("Problem");
 		System.out.println(formData);
 
 		return new RedirectView("/places");
