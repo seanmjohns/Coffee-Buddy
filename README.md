@@ -89,7 +89,11 @@ If you have maven installed, you can run the server with:
 ```shell
 mvn spring-boot:run
 ```
+if you do not have maven installed. you can run the server with:
 
+```shell
+mvnw spring-boot:run
+```
 You can then connect to it in your browser at `http://localhost:8080/`
 
 ## Troubleshooting
