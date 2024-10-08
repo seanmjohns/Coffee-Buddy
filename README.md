@@ -89,14 +89,10 @@ If you have maven installed, you can run the server with:
 ```shell
 mvn spring-boot:run
 ```
-if you do not have maven installed. you can run the server with:
-
-```shell
-mvnw spring-boot:run
-```
 You can then connect to it in your browser at `http://localhost:8080/`
 
 ## Troubleshooting
 
 Unusual error: `org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'placesController': Injection of autowired dependencies failed`
 Ensure you have setup your Google API key (See Server Setup (API Keys))
+Please let us know if you ahve any issues with the readme. 
