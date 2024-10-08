@@ -55,6 +55,7 @@ public class SecurityConfig {
             })
             .formLogin(httpForm ->{
                 httpForm.loginPage("/login").permitAll();
+                httpForm.failureUrl("/login?error");
                 httpForm.defaultSuccessUrl("/");
                 
             })

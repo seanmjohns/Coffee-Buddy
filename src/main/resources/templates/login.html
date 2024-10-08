@@ -11,6 +11,11 @@
     <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
         <h1 class="display-3 text-center mb-5">LocationSearch</h1>
 
+        <!-- Error Message -->
+        <div th:if="${param.error}" class="alert alert-danger w-50 text-center" role="alert">
+            Username or password is incorrect, please try again.
+        </div>
+
         <form action="/login" class="w-50" method="post">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
