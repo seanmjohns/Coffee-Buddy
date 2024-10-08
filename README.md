@@ -6,7 +6,7 @@ This project seeks to provide users with the ability to search for points of int
 
 Chrome is the only tested web browser for client use.
 
-There are known issues with running LocationSearch on FireFox. For example, you cannot create accounts if using FireFox.
+There are known issues with running LocationSearch on FireFox. For example, you cannot create in-house accounts if using FireFox. You will still be able to log into the application if using google accounts.
 
 ## Server Setup (API Keys + MySQL server setup)
 
@@ -15,7 +15,7 @@ Create and add to `src/main/resources/application.properties`:
 ```
 google.api.key=<insert_api_key_here>
 
-# MySQL Configuration
+# MySQL Configuration (See example_configs/example_application.properties for this example)
 
 #Below is an example configuration of a local mysql server (given you use the same parameters as the docker run command below)
 #spring.datasource.url=jdbc:mysql://localhost:3306/location_search_db
