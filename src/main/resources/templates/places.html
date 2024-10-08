@@ -500,7 +500,7 @@
         performSearch();
 
         // Add event listener to form submission
-        $('form').on('submit', function(event) {
+        $('form:not([action="/logout"])').on('submit', function(event) {
           event.preventDefault();
           performSearch();
         });
