@@ -6,7 +6,7 @@ This project seeks to provide users with the ability to search for points of int
 
 Chrome is the only tested web browser for client use.
 
-There are known issues with running LocationSearch on FireFox. For example, you cannot create in-house accounts if using FireFox. You will still be able to log into the application if using google accounts.
+There are known issues with running CoffeeBuddy on FireFox. For example, you cannot create in-house accounts if using FireFox. You will still be able to log into the application if using google accounts.
 
 ## Server Setup (API Keys + MySQL server setup)
 
