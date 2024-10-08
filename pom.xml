@@ -50,6 +50,27 @@
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
 
+		<!-- GCP SQL support 
+		<dependency>
+           <groupId>com.google.cloud</groupId>
+           <artifactId>spring-cloud-gcp-dependencies</artifactId>
+           <version>5.6.0</version>
+           <type>pom</type>
+           <scope>import</scope>
+       </dependency>
+	   -->
+
+
+	   
+
+	   <!-- Socket Factory for Google Cloud SQL -->
+	   <dependency>
+		    <groupId>com.google.cloud.sql</groupId>
+		    <artifactId>mysql-socket-factory</artifactId>
+		    <version>1.10.0</version>
+		</dependency>
+
+
 		<!-- MySQL for Password management -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -86,6 +107,14 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+			<!-- App Engine Plugin -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>2.3.0</version>
+			</plugin>
+
 		</plugins>
 	</build>
 
