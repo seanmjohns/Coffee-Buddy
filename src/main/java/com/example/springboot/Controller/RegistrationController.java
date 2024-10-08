@@ -22,7 +22,9 @@ public class RegistrationController {
     // Update the header of this, make sure you pass in the json
     @PostMapping(value = "/register", consumes = "application/json")
     public AppUser createUser(@RequestBody AppUser user){
+        // Encode the user's password before saving it to the database
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Save the new user to the database and return the saved user object
         return myAppUserRepository.save(user);
     }
 
