@@ -15,35 +15,28 @@ public class IndexController {
 	@GetMapping("/")
 	public String index() {
 		return "index";
-	}
-
-	@PostMapping("/")
-	public RedirectView handleFormSubmit(@RequestParam Map<String, String> formData) {
-		// Process form data here
-		System.out.println(formData);
-
-		return new RedirectView("/places");
-	}
-	*/
-
+	}*/
 
 	@GetMapping("/login")
 	public String login() {
-		return "login";
+		return "login"; // Return login view (login.html)
 	}
 
 	@GetMapping("/register")
 	public String register() {
-		return "register";
+		return "register"; // Return register view (register.html)
 	}
 
-	
+	/**
+	 * Handles POST requests from the login form.
+	 */
 	@PostMapping("/login")
 	public RedirectView handleLoginFormSubmit(@RequestParam Map<String, String> formData) {
 		// Process form data here
 		System.out.println("Problem");
 		System.out.println(formData);
 
+		// Redirect to the /places page after processing login data
 		return new RedirectView("/places");
 	}
 	
