@@ -95,4 +95,3 @@ You can then connect to it in your browser at `http://localhost:8080/`
 
 Unusual error: `org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'placesController': Injection of autowired dependencies failed`
 Ensure you have setup your Google API key (See Server Setup (API Keys))
-Please let us know if you ahve any issues with the readme. 

@@ -37,7 +37,6 @@ public class PlacesController {
         model.addAttribute("googleApiKey", googleApiKey);
         
         List<String> types = locationTypes != null ? Arrays.asList(locationTypes) : DEFAULT_LOCATION_TYPES;
-
         model.addAttribute("locationTypes", types);
         
         return "places";
