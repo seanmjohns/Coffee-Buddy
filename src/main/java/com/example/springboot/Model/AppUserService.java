@@ -19,13 +19,16 @@ public class AppUserService implements UserDetailsService{
     @Autowired
     private AppUserRepository repository;
     
+    //finds user by username
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //calls findByUsername, unsure where this is declared
         Optional<AppUser> user = repository.findByUsername(username);
         System.out.println("Searching for user, username: " + username);
         if (user.isPresent()) {
             var userObj = user.get();
             System.out.println("Found user!");
+            //builds user object to return from found user
             return User.builder()
                     .username(userObj.getUsername())
                     .password(userObj.getPassword())
