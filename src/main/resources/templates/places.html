@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CoffeeBuddy</title>
+    <!-- Including external stylesheets: Bootstrap Table for table styling and Bootstrap for general layout and styling -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.css"
@@ -12,11 +13,14 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <!-- jQuery for DOM manipulation and event handling -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <!-- Google Maps API with dynamic API key insertion using Thymeleaf -->
     <script
       th:src="'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places,geometry,drawing'"
     ></script>
+    <!-- Custom styles for the map and information window -->
     <style>
       #map {
         height: 500px;
@@ -37,6 +41,7 @@
     </style>
   </head>
   <body>
+    <!-- Top navigation bar with title and logout button -->
     <div class="container d-flex justify-content-between align-items-center mt-4 mb-4">
       <h1 class="mb-0">CoffeeBuddy</h1>
       <form method="POST" action="/logout">
@@ -48,6 +53,7 @@
         <p>Default search is centered on Georgia Tech (latitude: 33.7709454, longitude: -84.3942562).</p>
         <p><strong>Map Selection:</strong> Click on the map to set the center. Click and drag on the circle nodes to change radius (API has 5km search limit). Drag the green pin to move the circle.</p>
       </div>
+      <!-- Search form allowing users to input latitude, longitude, radius, location type, and limit of search results -->
       <form method="GET" action="/" class="mt-3 mb-3">
         <div class="row g-3">
           <div class="col-md-3">
@@ -170,6 +176,7 @@
       </table>
     </div>
 
+    <!-- Inline JavaScript to initialize the map and handle search functionality using Google Maps API -->
     <script th:inline="javascript">
       /*<![CDATA[*/
       const defaultLatitude = /*[[${latitude}]]*/ '33.7709454';
@@ -179,6 +186,7 @@
       const defaultLocationTypes = /*[[${locationTypes}]]*/ ['restaurant'];
       /*]]>*/
 
+      // Function to get URL parameter values
       function getUrlParameter(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         let regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
@@ -189,6 +197,7 @@
       }
 
       function initMap() {
+        //get coordinates from the urlparameters
         let latitude = parseFloat(getUrlParameter("latitude")) || parseFloat(defaultLatitude);
         let longitude = parseFloat(getUrlParameter("longitude")) || parseFloat(defaultLongitude);
         let radius = parseFloat(getUrlParameter("radius")) || parseFloat(defaultRadius);
@@ -197,6 +206,7 @@
         
         const latLong = { lat: latitude, lng: longitude };
 
+        //Create a new map centered on the coordinates
         const map = new google.maps.Map($("#map")[0], {
           center: latLong,
           zoom: 15,
