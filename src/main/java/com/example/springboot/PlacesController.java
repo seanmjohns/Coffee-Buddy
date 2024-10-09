@@ -13,15 +13,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class PlacesController {
 
+    // Inject Google API Key from the application properties
     @Value("${google.api.key}")
     private String googleApiKey;
 
+    // Default values for latitude, longitude, search radius, and location types
     private static final String DEFAULT_LATITUDE = "33.7709454";
     private static final String DEFAULT_LONGITUDE = "-84.3942562";
     private static final String DEFAULT_RADIUS = "500";
     private static final Integer DEFAULT_LIMIT = 10;
     private static final List<String> DEFAULT_LOCATION_TYPES = Arrays.asList("restaurant");
 
+    //Sets values from http request which overrides defaults
     @GetMapping("/")
     public String findPlaces(@RequestParam(value = "latitude", required = false) String latitude,
                  @RequestParam(value = "longitude", required = false) String longitude,
@@ -36,9 +39,11 @@ public class PlacesController {
         model.addAttribute("limit", limit != null ? limit : DEFAULT_LIMIT);
         model.addAttribute("googleApiKey", googleApiKey);
         
+        // Handle location types: if provided, convert them to a list; otherwise, use the default types
         List<String> types = locationTypes != null ? Arrays.asList(locationTypes) : DEFAULT_LOCATION_TYPES;
         model.addAttribute("locationTypes", types);
         
+        // Return the view name "places", which will be resolved to a Thymeleaf template (e.g., places.html)
         return "places";
     }
 }
